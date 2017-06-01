@@ -1,12 +1,51 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-	<title>天天生鲜-登录</title>
-	<link rel="stylesheet" type="text/css" href="/static/css/reset.css">
-	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
-</head>
-<body>
+{%extends 'base_foot.html'%}
+{%block head%}
+<script type="text/javascript">
+	$(function(){
+		var name_err = false;
+		var pwd_err = false;
+		if ({{err_name}}==1){
+			$(".user_error").html('用户名输入有误').show();
+		}
+
+		if ({{err_pwd}}==1){
+			$(".pwd_error").html('密码输入错误').show();
+		}
+
+		$(".name_input").blur(function(){
+			if($('.name_input').val().length==0){
+				$(".user_error").html("用户名不能为空").show();
+				name_err = false;
+			}
+			else{
+				$(".user_error").hide();
+				name_err = true;
+			}
+		});
+
+		$(".pass_input").blur(function(){
+			if($(".pass_input").val().length==0){
+				$(".pwd_error").html("密码不能为空").show();
+				pwd_err = false;
+			}
+			else{
+				$(".pwd_error").hide()
+				pwd_err = true;
+			}
+		});
+
+		$("#sub").submit(function(){
+			$(".name_input").blur();
+			$(".pass_input").blur();
+			return name_err && pwd_err;
+		})
+	})
+
+</script>
+
+
+{%endblock head%}
+{%block body%}
 	<div class="login_top clearfix">
 		<a href="/index" class="login_logo"><img src="/static/images/logo02.png"></a>	
 	</div>
@@ -21,13 +60,14 @@
 					<a href="/register">立即注册</a>
 				</div>
 				<div class="form_input">
-					<form>
-						<input type="text" name="username" class="name_input" placeholder="请输入用户名">
+					<form method="post" action="/login_check/" id="sub">
+                        {%csrf_token%}
+						<input type="text" name="username" class="name_input" placeholder="请输入用户名" value="{{name}}">
 						<div class="user_error">输入错误</div>
-						<input type="password" name="pwd" class="pass_input" placeholder="请输入密码">
+						<input type="password" name="pwd" class="pass_input" placeholder="请输入密码" value="{{pwd}}">
 						<div class="pwd_error">输入错误</div>
 						<div class="more_input clearfix">
-							<input type="checkbox" name="">
+							<input type="checkbox" name="jizhu" value="1" checked="checked">
 							<label>记住用户名</label>
 							<a href="#">忘记密码</a>
 						</div>
@@ -37,20 +77,4 @@
 			</div>
 		</div>
 	</div>
-
-	<div class="footer no-mp">
-		<div class="foot_link">
-			<a href="#">关于我们</a>
-			<span>|</span>
-			<a href="#">联系我们</a>
-			<span>|</span>
-			<a href="#">招聘人才</a>
-			<span>|</span>
-			<a href="#">友情链接</a>		
-		</div>
-		<p>CopyRight © 2016 北京天天生鲜信息技术有限公司 All Rights Reserved</p>
-		<p>电话：010-****888    京ICP备*******8号</p>
-	</div>
-	
-</body>
-</html>
+{%endblock body%}
