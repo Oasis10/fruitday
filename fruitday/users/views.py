@@ -6,7 +6,7 @@ import hashlib
 from users_decorator import log_in
 
 def index(request):
-    return render(request, 'users/index.html', {"title":"首页"})
+    return render(request, 'df_goods/index.html', {"title":"首页"})
 
 
 def register(request):
@@ -84,8 +84,26 @@ def logout(request):
     return redirect('/')
 
 @log_in
-def user_center_info(request):
-    return render(request, 'users/user_center_info.html', {"title":"用户中心"})
+def info(request):
+    user = UserInfo.objects.get(id=request.session.get("user_id", ''))
+    context = {"title":"用户中心", "name":user.name, "email":user.email, "cellphone":user.cellphone, "addr":user.address, 'page_name':1}
+    print user.email
+    return render(request, 'users/user_center_info.html', context)
+
+@log_in
+def address(request):
+    user = UserInfo.objects.get(id=request.session.get("user_id"))
+    if request.method == 'POST':
+        post = request.POST
+        user.addressee = post.get('addressee')
+        user.address = post.get('address')
+        user.email = post.get('email')
+        user.zip_code = post.get('zip_code')
+        user.cellphone = post.get('cellphone')
+        user.save()
+    context = {'title':'收货信息', 'user':user, 'page_name':1}
+    print user.cellphone
+    return render(request, 'users/user_center_site.html', context)
 
 
 
