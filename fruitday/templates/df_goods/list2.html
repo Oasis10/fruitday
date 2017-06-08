@@ -1,0 +1,63 @@
+{%extends 'df_goods/base.html'%}
+
+{%block content1%}
+<div class="breadcrumb">
+		<a href="#">全部分类</a>
+		<span>></span>
+		<a href="#">{{cur_type.title}}</a>
+	</div>
+{%endblock content1%}
+
+{%block content2%}
+
+		<div class="r_wrap fr clearfix">
+			<div class="sort_bar">
+				<a href="/list{{tid}}_{{page.number}}/?orderby=n" {%if orderby == "n"%}class="active"{%endif%}>最新</a>
+				<a href="/list{{tid}}_{{page.number}}/?orderby=p" {%if orderby == "p"%}class="active"{%endif%}>价格</a>
+				<a href="/list{{tid}}_{{page.number}}/?orderby=c" {%if orderby == "c"%}class="active"{%endif%}>人气</a>
+			</div>
+
+			<ul class="goods_type_list clearfix">
+                {%for item in page%}
+				<li>
+					<a href="/{{item.id}}/"><img src="/static/{{item.pic}}"></a>
+					<h4><a href="#">{{item.title}}</a></h4>
+					<div class="operate">
+						<span class="prize">￥{{item.price}}</span>
+						<span class="unit">{{item.price}}/{{item.unit}}</span>
+						<a href="#" class="add_goods" title="加入购物车"></a>
+					</div>
+				</li>
+                {%endfor%}
+			</ul>
+
+
+
+
+
+            <div class="pagenation">
+              {% ifnotequal cur_page 1 %}
+                <a href="?curPage=1&&allPage={{ all_page }}">首页</a>
+            <a href="?curPage={{ cur_page }}&&allPage={{ all_page }}&&pageType=pageUp">
+                上一页
+            </a>
+
+        {% endifnotequal %}
+
+        <a href="?curPage={{ cur_page }}&&allPage={{ all_page }}&&pageType=pageUp"> {{cur_page|add:-2}} </a>
+        <a href="?curPage={{ cur_page }}&&allPage={{ all_page }}&&pageType=pageUp"> {{cur_page|add:-1}} </a>
+        <a href="?curPage={{ cur_page }}&&allPage={{ all_page }}&&pageType=pageUp" class="active"> {{cur_page}} </a>
+        <a href="?curPage={{ cur_page }}&&allPage={{ all_page }}&&pageType=pageUp"> {{cur_page|add:1}} </a>
+        <a href="?curPage={{ cur_page }}&&allPage={{ all_page }}&&pageType=pageUp"> {{cur_page|add:2}} </a>
+
+
+         <!-- 如果当前是最后一页，就不显示【下一页】链接 -->
+        {% ifnotequal cur_page all_page %}
+            <a href="?curPage={{ cur_page }}&&allPage={{ all_page }}&&pageType=pageDown">
+                下一页
+            </a>
+        {% endifnotequal %}
+            </div>
+            </div>
+{%endblock content2%}
+

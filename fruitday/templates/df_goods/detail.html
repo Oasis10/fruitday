@@ -1,0 +1,123 @@
+{%extends 'df_goods/base.html'%}
+
+{%block head%}
+	<script>
+		function calcTotal() {
+			price=parseFloat($("#showp").text());
+			count=parseInt($('.num_show').val());
+			$("#price").html((price*count).toFixed(2)+"元");
+		}
+
+		$(function () {
+			$(".num_show").blur(function () {
+				calcTotal();
+			});
+
+			$(".add").click(function () {
+				$(".num_show").val(parseInt($(".num_show").val())+1);
+				calcTotal();
+			});
+
+			$(".minus").click(function () {
+				count=parseInt($('.num_show').val())-1;
+            	if(count<=1){
+                $('.num_show').val(1);
+            	}else{
+                $('.num_show').val(count);
+            }
+				calcTotal();
+			});
+		});
+
+
+		
+	</script>
+{%endblock head%}
+
+
+
+{%block content1%}
+	<div class="breadcrumb">
+		<a href="#">全部分类</a>
+		<span>></span>
+		<a href="#">新鲜水果</a>
+		<span>></span>
+		<a href="#">商品详情</a>
+	</div>
+	<div class="goods_detail_con clearfix">
+		<div class="goods_detail_pic fl"><img src="/static/{{goods.pic}}"></div>
+
+		<div class="goods_detail_list fr">
+			<h3>{{goods.title}}</h3>
+			<p>{{goods.intro}}</p>
+			<div class="prize_bar">
+				<span class="show_pirze">¥<em id="showp">{{goods.price}}</em></span>
+				<span class="show_unit">单  位：{{goods.unit}}</span>
+			</div>
+			<div class="goods_num clearfix">
+				<div class="num_name fl">数 量：</div>
+				<div class="num_add fl">
+					<input type="text" class="num_show fl" value="1">
+					<a href="javascript:;" class="add fr">+</a>
+					<a href="javascript:;" class="minus fr">-</a>
+				</div>
+			</div>
+			<div class="total">总价：<em id="price">{{goods.price}}元</em></div>
+			<div class="operate_btn">
+				<a href="javascript:;" class="buy_btn">立即购买</a>
+				<a href="javascript:;" class="add_cart" id="add_cart">加入购物车</a>
+			</div>
+		</div>
+	</div>
+{%endblock content1%}
+
+{%block content2%}
+		<div class="r_wrap fr clearfix">
+			<ul class="detail_tab clearfix">
+				<li class="active">商品介绍</li>
+				<li>评论</li>
+			</ul>
+
+			<div class="tab_content">
+				<dl>
+					<dt>商品详情：</dt>
+					<dd>{{goods.content|safe}}</dd>
+				</dl>
+			</div>
+
+		</div>
+
+	<div class="add_jump"></div>
+
+	<script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript">
+		var $add_x = $('#add_cart').offset().top;
+		var $add_y = $('#add_cart').offset().left;
+
+		var $to_x = $('#show_count').offset().top;
+		var $to_y = $('#show_count').offset().left;
+
+		$("#add_cart").click(function () {
+			$.get("/cart/add/", {"gid":{{goods.id}}, "count":$('.num_show').val()}, function (data) {
+				if(data.is_login==0){
+					location.href = "/user/login/";
+					return;
+				}
+				else{
+					$("#show_count").html(data.count);
+				}
+			$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
+			.animate({
+			'left': $to_y+7,
+			'top': $to_x+7},
+			"fast", function() {
+				$(".add_jump").fadeOut('fast');
+				});
+			});
+		  });
+
+
+	</script>
+
+{%endblock content2%}
+	

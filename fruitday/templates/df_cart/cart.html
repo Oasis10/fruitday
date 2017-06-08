@@ -1,0 +1,144 @@
+{%extends 'base.html'%}
+{%block head%}
+<script text="text/javascript">
+	function calc_total() {
+		var total = 0;
+		var count_total = 0;
+		var count_select = 0;
+		$(".cart_list_td").each(function () {
+			var price = parseFloat($(this).children(".col05").children("em").html()).toFixed(2);
+			var count = parseInt($(this).find(".num_show").val());
+			var total_each = price*count;
+			$(this).children(".col07").html(total_each.toFixed(2)+"元");
+			if($(this).children(".col01").children("input").prop("checked")){
+				total += total_each;
+				count_select += count;
+			}
+			count_total += count;
+		});
+		var settlements = $(".settlements");
+		settlements.find("em").html(total.toFixed(2));
+		settlements.find("b").html(count_select);
+		$(".total_count").children("em").html(count_total)
+	}
+
+	function del(cart_id) {
+		if(confirm("确定删除此商品？")){
+			$.get("/cart/delete/",{cart_id:cart_id},function (data) {
+				if(data.result=="ok"){
+					$("#"+cart_id).remove();
+					calc_total();
+				}
+				else if(data.result=="failed"){
+					alert("删除失败！")
+				}
+			});
+		}
+	}
+
+	$(function () {
+		calc_total();
+		$("#check_all").change(function () {
+		// 切换全选全消
+			$(":checkbox:not(#check_all)").prop("checked",$(this).prop("checked"));
+			calc_total();
+		});
+		// 判断是否全选
+		$(":checkbox:not(#check_all)").change(function () {
+			calc_total();
+			if($(":checkbox:not(#check_all)").length==$(":checked:not(#check_all)")){
+			$("#check_all").prop("checked",true)
+			}
+			else{
+			$("#check_all").prop("checked",false)
+			}
+		});
+//		$(":checkbox:not(#check_all)").each(function () {
+//			$(this).change(function () {
+//				if($(this).prop("checked")==false) {
+//					$("#check_all").prop("checked", false);
+//				}
+//			});
+//		});
+
+	// 加
+		$(".add").click(function () {
+			count = parseInt($(this).next().val());
+			count+=1;
+			$(this).next().val(count).blur();
+		});
+	// 减
+		$(".minus").click(function () {
+			count = parseInt($(this).prev().val());
+			count-=1;
+			$(this).prev().val(count).blur();
+		});
+	// 显示
+		$(".num_show").blur(function () {
+			var inventory = parseInt($(this).prev().attr("value"));
+			var count = parseInt($(this).val());
+			if(count>=inventory){count=inventory}
+			if(count<=1){count=1}
+			var cart_id = $(this).attr("ci");
+			var num_show = $(this);
+			$.get("/cart/count_change/",{"id":cart_id,"count":count},function (data) {
+				num_show.val(data.count);
+				calc_total()
+			});
+		});
+	// 显示
+//		$(".num_show").blur(function () {
+//			var inventory = $(this).attr("value");
+//			if($(this).next().val()<inventory){
+//				$(this).next().val($(this).next().val()+1)
+//			}
+//			else{
+//				$(this).next().val(inventory)
+//			}
+//		})
+
+
+
+	});
+</script>
+
+{%endblock head%}
+{%block content%}
+	<div class="total_count">全部商品<em>2</em>件</div>	
+	<ul class="cart_list_th clearfix">
+		<li class="col01">商品名称</li>
+		<li class="col02">商品单位</li>
+		<li class="col03">商品价格</li>
+		<li class="col04">数量</li>
+		<li class="col05">小计</li>
+		<li class="col06">操作</li>
+	</ul>
+	{%for cart in cart_list%}
+	<ul class="cart_list_td clearfix" id="{{cart.id}}">
+		<li class="col01"><input type="checkbox" name="" checked></li>
+		<li class="col02"><img src="/static/{{cart.goods.pic}}"></li>
+		<li class="col03">{{cart.goods.title}}<br>库存<em>{{cart.goods.inventory}}</em></li>
+		<li class="col04">{{cart.goods.unit}}</li>
+		<li class="col05"><em>{{cart.goods.price}}</em>元</li>
+		<li class="col06">
+			<div class="num_add">
+				<a href="javascript:;" class="add fl" value="{{cart.goods.inventory}}">+</a>
+				<input type="text" class="num_show fl" value="{{cart.count}}" ci="{{cart.id}}">
+				<a href="javascript:;" class="minus fl">-</a>	
+			</div>
+		</li>
+		<li class="col07"></li>
+		<li class="col08"><a href="javascript:del({{cart.id}});">删除</a></li>
+	</ul>
+	{%endfor%}
+
+	
+
+	<ul class="settlements">
+		<li class="col01"><input type="checkbox" name="" checked="" id="check_all"></li>
+		<li class="col02">全选</li>
+		<li class="col03">合计(不含运费)：<span>¥</span><em></em><br>共计<b></b>件商品</li>
+		<li class="col04"><a href="place_order.html">去结算</a></li>
+	</ul>
+
+{%endblock content%}

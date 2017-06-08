@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from models import *
 import hashlib
 from users_decorator import log_in
+import time
 
 def index(request):
     return render(request, 'df_goods/index.html', {"title":"首页"})
@@ -32,8 +33,9 @@ def register_handle(request):
     print "usr"+user.password
     user.email = email
     user.save()
-    return render(request, 'users/register.html', {"title":"注册成功"})
-
+    # return render(request, 'users/register.html', {"title":"注册成功"})
+    time.sleep(0.8)
+    return redirect('/user/login')
 def register_exist(request):
     # 判断用户名是否存在
     name = request.GET.get("uname")
