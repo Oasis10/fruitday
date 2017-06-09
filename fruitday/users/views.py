@@ -2,9 +2,11 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from models import *
-import hashlib
+from df_order.models import *
 from users_decorator import log_in
+from django.core.paginator import Paginator,Page
 import time
+import hashlib
 
 def index(request):
     return render(request, 'df_goods/index.html', {"title":"首页"})
@@ -106,6 +108,21 @@ def address(request):
     context = {'title':'收货信息', 'user':user, 'page_name':1}
     print user.cellphone
     return render(request, 'users/user_center_site.html', context)
+
+@log_in
+def order(request,pindex):
+    order_list =OrderInfo.objects.filter(user_id=request.session['user_id']).order_by('-oid')
+    paginator = Paginator(order_list,2)
+    if pindex == '':
+        pindex = '1'
+    page=paginator.page(int(pindex))
+    context={'title':'用户中心',
+             'page_name':1,
+             'paginator':paginator,
+             'page':page,}
+    return render(request,'users/user_center_order.html',context)
+
+
 
 
 

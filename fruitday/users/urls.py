@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^info/$', views.info),
     url(r'^logout/$', views.logout),
     url(r'^add/$', views.address),
+    url(r'^order(\d*)/$', views.order),
 
 ]

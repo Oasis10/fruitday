@@ -10,6 +10,9 @@ class OrderInfo(models.Model):
     is_pay = models.BooleanField(default=False)
     total = models.DecimalField(max_digits=6,decimal_places=2)
     address = models.CharField(max_length=150)
+    def __str__(self):
+        return self.oid
+
 
 class OrderDetailInfo(models.Model):
     goods = models.ForeignKey('df_goods.GoodsInfo')

@@ -3,6 +3,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from models import *
+from users.models import *
 from users.users_decorator import *
 from df_goods.views import cart_count
 
@@ -61,5 +62,20 @@ def delete(request):
     except Exception,e:
         print e
         return JsonResponse({'result':'failed'})
+
+def order(request):
+    info = request.GET
+    # 获取登录用户
+    user = UserInfo.objects.get(id=request.session['user_id'])
+    # 获取购物车id列表
+    cart_id = info.getlist('cart_id')
+    cart_list = CartInfo.objects.filter(id__in=cart_id)
+    context = {
+        'page_name':1,
+        'title':'提交订单',
+        'user':user,
+        'cart_list':cart_list
+    }
+    return render(request, 'df_cart/order.html', context)
 
 
