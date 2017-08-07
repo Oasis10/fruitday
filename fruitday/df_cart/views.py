@@ -18,7 +18,6 @@ def add(request):
     # 如果没有查到就创建一个新的购物车对象
     # if not carts.count():
     if len(carts) == 0:
-        print 111
         cart = CartInfo()
         cart.goods_id = gid
         cart.user_id = request.session['user_id']

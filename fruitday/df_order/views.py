@@ -69,6 +69,13 @@ def order(request):
     except Exception, e:
         print e
         transaction.savepoint_rollback(sid)
-        return redirect('/')
+        return redirect('/cart/')
+
+def is_pay(request):
+    oid = request.GET.get('oid')
+    order = OrderInfo.objects.get(oid=oid)
+    order.is_pay = True
+    order.save()
+    return redirect('/user/order/')
 
 

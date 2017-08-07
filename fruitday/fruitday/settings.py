@@ -26,7 +26,7 @@ SECRET_KEY = '%^ju8*(67%rdx05_j6)grda2s2sv7w9!3jwnqp8z&7m^r*x!1-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*',]
 
 
 # Application definition
@@ -115,6 +115,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'st')
 ]
+STATIC_ROOT='/var/www/fruitday/static'
 MEDIA_ROOT=os.path.join(BASE_DIR,'st')
 
 TINYMCE_DEFAULT_CONFIG = {

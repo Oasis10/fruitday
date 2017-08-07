@@ -38,6 +38,7 @@ def register_handle(request):
     # return render(request, 'users/register.html', {"title":"注册成功"})
     time.sleep(0.8)
     return redirect('/user/login')
+
 def register_exist(request):
     # 判断用户名是否存在
     name = request.GET.get("uname")
@@ -101,7 +102,7 @@ def address(request):
         post = request.POST
         user.addressee = post.get('addressee')
         user.address = post.get('address')
-        user.email = post.get('email')
+        # user.email = post.get('email')
         user.zip_code = post.get('zip_code')
         user.cellphone = post.get('cellphone')
         user.save()

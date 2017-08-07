@@ -114,8 +114,8 @@
 	{%for cart in cart_list%}
 	<ul class="cart_list_td clearfix" id="{{cart.id}}">
 		<li class="col01"><input type="checkbox" name="cart_id" checked="checked" value="{{cart.id}}"></li>
-		<li class="col02"><img src="/static/{{cart.goods.pic}}"></li>
-		<li class="col03">{{cart.goods.title}}<br>库存<em>{{cart.goods.inventory}}</em></li>
+		<li class="col02"><a href="/{{cart.goods.id}}/"><img src="/static/{{cart.goods.pic}}"></a></li>
+		<li class="col03"><a href="/{{cart.goods.id}}/">{{cart.goods.title}}</a><br>库存<em>{{cart.goods.inventory}}</em></li>
 		<li class="col04">{{cart.goods.unit}}</li>
 		<li class="col05"><em>{{cart.goods.price}}</em>元</li>
 		<li class="col06">
@@ -129,6 +129,7 @@
 		<li class="col08"><a href="javascript:del({{cart.id}});">删除</a></li>
 	</ul>
 	{%endfor%}
+
 
 	
 
